@@ -1,0 +1,94 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{biblatex}
+
+\addbibresource{documentation.bib}
+
+
+\title{An Evaluation of the current State of web server development in Rust and Java}
+\author{Marc Matija}
+\date{\today}
+ 
+\begin{document}
+	\maketitle
+	\vspace{2cm}
+	\begin{abstract}
+		This paper aims to evaluate of the current state of web server development in Rust and Java. 
+		In doing so, it will cover the basics of web server development in both languages, the tools and libraries 
+		available, and the advantages and disadvantages of using each language for web server development. 
+		Furthermore it will include a comparison of the two languages in terms of performance, ease of 
+		use, and other factors that are important for web server development.
+	\end{abstract}
+	
+	\newpage
+	\tableofcontents
+	\newpage
+	
+	\section{Introduction}
+	\label{sec:introduction}
+	Web server development is an important aspect of modern software development as they are 
+	used to host websites, web applications, and other online services.
+	One of the most popular languages for this is Java and the Spring framework.
+	Java is a mature and widely used programming language that is known for its performance, scalability, and reliability.
+	However, in recent years, Rust has emerged as a promising alternative to Java for web server development as seen at Discord 
+	\cite{Discord}, Cloudflare\cite{Cloudflare_Pingora}, and other companies. 
+	Rust is in stark contrast to Java, is a systems programming language that is designed for performance, safety, and concurrency.
+	This paper aims to evaluate the current state of web server development in Rust and Java, and to provide an overview of 
+	the tools, libraries, and best practices for web server development in both languages.
+	
+	\subsection{An Overview of Spring Boot}
+	\label{subsec:spring_boot}
+	Spring Boot is a popular Java framework for building web applications and microservices used by companies like 
+	Deutsche Bahn\cite{DB_Job_Description}, Udemy \cite{Techstack_Udemy} and many others\cite{Spring_Boot_stackshare}.
+	Built on top of the Spring framework, Spring Boot provides a set of tools and libraries that make it easy to build
+	web applications and microservices in Java. It finds wide adoption in the industry due to its ease of use, maintanability 
+	and scalability, aswell as the vast amount of libraries and tools available for it.
+
+	\subsection{An Overview of Actix Web}
+	\label{subsec:actix_web}
+	Actix is a Rust framework for building backend services in rust and the one currently one of the most actively developed framworks,
+	within the Rust ecosystem. It provides provides a very similar feature set to Spring Boot making it a suitable candidate for comparison.
+
+
+	\section{Specifications for the web server}
+	\label{sec:example_project}
+	In order to evaluate the current state of web server development in Rust and Java, I will build a simple web server in both languages
+	using the previously mentioned frameworks. The web server will feature a REST api that allows users to create channels, add messages to channels,
+	and retrieve messages from said channels. In addition, the web server will feature a websocket endpoint that allows users to subscribe to channels
+	and receive messages in real-time.
+
+	\subsection{REST API}
+	\subsection{Websocket API}
+	\subsection{Database Schema}
+	\subsection{Authentication}
+
+	\section{Implementation in Java}
+	\label{sec:java_implementation}
+
+	\section{Implementation in Rust}
+	\label{sec:rust_implementation}
+
+	\section{Comparison}
+	\label{sec:comparison}
+	\subsection{Developer Experience}
+	\subsection{Performance}
+	
+	\section{Conclusion}
+
+	\section{Sources}
+	\label{sec:Sources}
+	\begin{itemize}
+		\item \href{https://rust-edu.org/resources/}{Rust Edu}
+		\item \href{https://doc.rust-lang.org/book/}{The Rust Programming Language}
+		\item \href{https://doc.rust-lang.org/std/}{Rust Standard Library}
+		\item \href{https://doc.rust-lang.org/cargo/}{Cargo Guide}
+		\item \href{https://doc.rust-lang.org/rust-by-example/}{Rust by Example}
+		\item \href{https://doc.rust-lang.org/rustdoc/}{Rustdoc}
+		\item \href{https://actix.rs/}{Actix}
+	\end{itemize}
+	\printbibliography[title={Whole bibliography}]
+\end{document}
