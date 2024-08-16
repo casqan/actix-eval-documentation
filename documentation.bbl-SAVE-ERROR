@@ -1,0 +1,167 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{Cloudflare_Pingora}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3f07179a07b2a7661e37a3fd0e652a07}{%
+           family={Cloudflare},
+           familyi={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{3f07179a07b2a7661e37a3fd0e652a07}
+      \strng{fullhash}{3f07179a07b2a7661e37a3fd0e652a07}
+      \strng{bibnamehash}{3f07179a07b2a7661e37a3fd0e652a07}
+      \strng{authorbibnamehash}{3f07179a07b2a7661e37a3fd0e652a07}
+      \strng{authornamehash}{3f07179a07b2a7661e37a3fd0e652a07}
+      \strng{authorfullhash}{3f07179a07b2a7661e37a3fd0e652a07}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Open sourcing Pingora: our Rust framework for building programmable network services}
+      \field{urlday}{14}
+      \field{urlmonth}{8}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://blog.cloudflare.com/pingora-open-source
+      \endverb
+      \verb{url}
+      \verb https://blog.cloudflare.com/pingora-open-source
+      \endverb
+    \endentry
+    \entry{Discord}{online}{}
+      \name{author}{1}{}{%
+        {{hash=8f5cc6430613f1c12f36965050bb7197}{%
+           family={Discord},
+           familyi={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{8f5cc6430613f1c12f36965050bb7197}
+      \strng{fullhash}{8f5cc6430613f1c12f36965050bb7197}
+      \strng{bibnamehash}{8f5cc6430613f1c12f36965050bb7197}
+      \strng{authorbibnamehash}{8f5cc6430613f1c12f36965050bb7197}
+      \strng{authornamehash}{8f5cc6430613f1c12f36965050bb7197}
+      \strng{authorfullhash}{8f5cc6430613f1c12f36965050bb7197}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Why Discord is switching from Go to Rust}
+      \field{urlday}{14}
+      \field{urlmonth}{8}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://discord.com/blog/why-discord-is-switching-from-go-to-rust
+      \endverb
+      \verb{url}
+      \verb https://discord.com/blog/why-discord-is-switching-from-go-to-rust
+      \endverb
+    \endentry
+    \entry{DB_Job_Description}{online}{}
+      \name{author}{1}{}{%
+        {{hash=673cdb708c705f62b62d35d3c83b82ee}{%
+           family={Jobs},
+           familyi={J\bibinitperiod},
+           given={DB},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{673cdb708c705f62b62d35d3c83b82ee}
+      \strng{fullhash}{673cdb708c705f62b62d35d3c83b82ee}
+      \strng{bibnamehash}{673cdb708c705f62b62d35d3c83b82ee}
+      \strng{authorbibnamehash}{673cdb708c705f62b62d35d3c83b82ee}
+      \strng{authornamehash}{673cdb708c705f62b62d35d3c83b82ee}
+      \strng{authorfullhash}{673cdb708c705f62b62d35d3c83b82ee}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Einstiegsmöglichkeiten für IT Professionals!}
+      \field{urlday}{14}
+      \field{urlmonth}{8}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://db.jobs/de-de/dein-einstieg/akademische-professionals/it
+      \endverb
+      \verb{url}
+      \verb https://db.jobs/de-de/dein-einstieg/akademische-professionals/it
+      \endverb
+    \endentry
+    \entry{Spring_Boot_stackshare}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=82e5b73b43ff221e830bdb2f160d81e7}{%
+           family={Stackshare},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{82e5b73b43ff221e830bdb2f160d81e7}
+      \strng{fullhash}{82e5b73b43ff221e830bdb2f160d81e7}
+      \strng{bibnamehash}{82e5b73b43ff221e830bdb2f160d81e7}
+      \strng{authorbibnamehash}{82e5b73b43ff221e830bdb2f160d81e7}
+      \strng{authornamehash}{82e5b73b43ff221e830bdb2f160d81e7}
+      \strng{authorfullhash}{82e5b73b43ff221e830bdb2f160d81e7}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Spring Boot}
+      \field{urlday}{14}
+      \field{urlmonth}{8}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://stackshare.io/spring-boot
+      \endverb
+      \verb{url}
+      \verb https://stackshare.io/spring-boot
+      \endverb
+    \endentry
+    \entry{Techstack_Udemy}{online}{}
+      \name{author}{1}{}{%
+        {{hash=12812ea78dbc80e6065f794c752272e9}{%
+           family={Udemy},
+           familyi={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{12812ea78dbc80e6065f794c752272e9}
+      \strng{fullhash}{12812ea78dbc80e6065f794c752272e9}
+      \strng{bibnamehash}{12812ea78dbc80e6065f794c752272e9}
+      \strng{authorbibnamehash}{12812ea78dbc80e6065f794c752272e9}
+      \strng{authornamehash}{12812ea78dbc80e6065f794c752272e9}
+      \strng{authorfullhash}{12812ea78dbc80e6065f794c752272e9}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Tge Udemy Techstack}
+      \field{urlday}{14}
+      \field{urlmonth}{8}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://stackshare.io/udemy/udemy
+      \endverb
+      \verb{url}
+      \verb https://stackshare.io/udemy/udemy
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
