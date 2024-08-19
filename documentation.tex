@@ -79,11 +79,11 @@
 	\newpage
 	\section{Specifications for the web server}
 	\label{sec:example_project}
-	In order to evaluate the current state of web server development in Rust and Java, I will build a simple web server in both languages
-	using the previously mentioned frameworks. The web server will feature a REST api that allows users to create channels, add messages to channels,
-	and retrieve messages from said channels. In addition, the web server will feature a websocket endpoint that allows users to subscribe to channels
-	and receive messages in real-time. Authentication will be handled using JWT tokens and a profile endpoint to authenticate users
-	and retrieve their information.
+	In order to evaluate the current state of web server development in Rust and Java, I will build a simple web server in 
+	both languages using the previously mentioned frameworks. The web server will feature a REST api that allows users to 
+	create channels, add messages to channels, and retrieve messages from said channels. In addition, the web server will 
+	feature a websocket endpoint that allows users to subscribe to channels and receive messages in real-time. Authentication 
+	will be handled using JWT tokens and a profile endpoint to authenticate users and retrieve their information.
 
 	\subsection{REST API}
 	\label{subsec:rest_api}
@@ -167,9 +167,10 @@
 				\end{messcall}
 			\end{call}
 	\end{sequencediagram} \\
-	In a websocket connection request, the headers of the HTTP request cannot be modified, the server will have to first accept the connection, then 
-	wait for the client to send a JWT token. The server will then verify the token and if it is valid, the client will be
-	subscribed able to receive all messages from the channels they are a part of. Recieved messages will take the same format as the messages in the REST API.
+	In a websocket connection request, the headers of the HTTP request cannot be modified, the server will have to first 
+	accept the connection, then wait for the client to send a JWT token. The server will then verify the token and if it is 
+	valid, the client will be subscribed able to receive all messages from the channels they are a part of. Recieved 
+	messages will take the same format as the messages in the REST API.
 
 
 	\subsection{Database Schema}
@@ -179,9 +180,10 @@
 
 	\subsection{Authentication}
 	\label{subsec:authentication}
-	Authentication will be handled using JWT tokens. When a client signs up or signs in, they will receive a JWT token that they can use to authenticate themselves
-	when making requests to the web server. The JWT token will be sent in the Authorization header of the HTTP request as a Bearer token. Both Server
-	implementations will have to verify the token before allowing the client to access the requested resource.
+	Authentication will be handled using JWT tokens. When a client signs up or signs in, they will receive a JWT token that
+	they can use to authenticate themselves when making requests to the web server. The JWT token will be sent in the 
+	Authorization header of the HTTP request as a Bearer token. Both Server implementations will have to verify the token 
+	before sending new messages to the client.
 
 	\section{Implementation in Java}
 	\label{sec:java_implementation}
