@@ -8,6 +8,7 @@
 \usepackage{pgf-umlsd}
 \usepackage{parallel}
 \usepackage{tikz}
+\usepackage{wrapfig}
 \graphicspath{ {./img/} }
 \usetikzlibrary{shapes.multipart}
 \usetikzlibrary{positioning}
@@ -66,16 +67,17 @@
 	\label{subsec:used_technologies}
 	In addition to the frameworks mentioned above, I will use the following technologies to build the web server:
 	\begin{itemize}
-		\item \textbf{PostgreSQL} \- A popular open-source relational database management system that is widely used in the industry.
-		\item \textbf{Docker} \- A platform for building, shipping, and running applications in containers.
-		\item \textbf{Docker Compose} \- A tool for defining and running multi-container Docker applications.
-		\item \textbf{JWT} \- A standard for creating JSON-based access tokens that are used for authentication and authorization.
-		\item \href{https://swagger.io/}{Swagger} \- A tool for designing, building, and documenting APIs.
-		\item \href{https://junit.org/junit5/}{JUnit} \- A popular testing framework for Java.
-		\item \textbf{Actix Web Test} \- A testing framework for Actix Web.
-		\item \href{https://www.postman.com/}{Postman} \- A tool for testing APIs.
-		\item \href{https://k6.io/}{K6} \- A tool for load testing web applications.
-		\item \href{https://dbeaver.io/}{DBeaver} \- A database management tool.
+		\item \href{https://www.jetbrains.com/de-de/rust/}{RustRover} An IDE by Jetbrains that provides support for Rust development.
+		\item \href{https://www.jetbrains.com/de-de/idea/}{IntelliJ IDEA Ultimate} An IDE by Jetbrains that provides support for Java development.
+		\item \href{https://www.postgresql.org/}{PostgreSQL} A popular open-source relational database management system that is widely used in the industry.
+		\item \href{https://www.docker.com/}{Docker} A platform for building, shipping, and running applications in containers.
+		\item \href{https://docs.docker.com/compose/}{Compose} A tool for defining and running multi-container Docker applications.
+		\item \href{https://jwt.io/}{JWT} A standard for creating JSON-based access tokens that are used for authentication and authorization.
+		\item \href{https://swagger.io/}{Swagger}  A tool for designing, building, and documenting APIs.
+		\item \href{https://junit.org/junit5/}{JUnit} A popular testing framework for Java.
+		\item \href{https://www.postman.com/}{Postman} A tool for testing APIs.
+		\item \href{https://k6.io/}{K6} A tool for load testing web applications.
+		\item \href{https://dbeaver.io/}{DBeaver} A database management tool.
 	\end{itemize}
 
 	\newpage
@@ -107,15 +109,15 @@
 
 	Message endpoints:
 	\begin{itemize}
-		\item \textbf{Add Message} \- \texttt{ POST /api/v1/channels/\{id\}/messages } \\
+		\item \textbf{Add Message} \texttt{ POST /api/v1/channels/\{id\}/messages } \\
 		Adds a new message to the channel with the given id.
-		\item \textbf{Get Message} \- \texttt{ GET /api/v1/channels/\{id\}/messages/\{id\} } \\
+		\item \textbf{Get Message} \texttt{ GET /api/v1/channels/\{id\}/messages/\{id\} } \\
 		Retrieves the message with the given id from the channel with the given id.
-		\item \textbf{Get All Messages} \- \texttt{ GET /api/v1/channels/\{id\}/messages } \\
+		\item \textbf{Get All Messages} \texttt{ GET /api/v1/channels/\{id\}/messages } \\
 		Retrieves all messages from the channel with the given id.
-		\item \textbf{Change Message} \- \texttt{ PUT /api/v1/channels/\{id\}/messages/\{id\} } \\
+		\item \textbf{Change Message} \texttt{ PUT /api/v1/channels/\{id\}/messages/\{id\} } \\
 		Changes the content of the message with the given id from the channel with the given id.
-		\item \textbf{Delete Message} \- \texttt{ DELETE /api/v1/channels/\{id\}/messages/\{id\}}
+		\item \textbf{Delete Message} \texttt{ DELETE /api/v1/channels/\{id\}/messages/\{id\}}
 		Deletes the message with the given id from the channel with the given id.
 	\end{itemize}
 
@@ -151,33 +153,37 @@
 		Subscribes the user to the websocket endpoint and allows them to receive updates when new messages are added
 		to the channels they are a member of.
 	\end{itemize}
-	\begin{figure}[h]
-		\caption[Message flow in a websocket connection]{Message flow in a websocket connection}
-		\begin{sequencediagram}
-			\renewcommand\unitfactor{0.6}
-			\newthread{c}{Client}
-			\newinst[1]{s}{Web Server}
-			\begin{call}{c}{open()}{s}{}
-				\begin{call}{c}{auth()}{s}{}
-					\begin{call}{s}{verify()}{s}{}
+
+	\begin{wrapfigure}{L}{0.5\textwidth}
+		\begin{center}
+			\begin{sequencediagram}
+				\renewcommand\unitfactor{0.6}
+				\newthread{c}{Client}
+				\newinst[1]{s}{Web Server}
+				\begin{call}{c}{open()}{s}{}
+					\begin{call}{c}{auth()}{s}{}
+						\begin{call}{s}{verify()}{s}{}
+						\end{call}
 					\end{call}
-				\end{call}
-				\begin{sdblock}{New Message}{}
-					\begin{messcall}{s}{send()}{c}
+					\begin{sdblock}{New Message}{}
+						\begin{messcall}{s}{send()}{c}
+						\end{messcall}
+					\end{sdblock}
+					\begin{messcall}{c}{close()}{s}{}
 					\end{messcall}
-				\end{sdblock}
-				\begin{messcall}{c}{close()}{s}{}
-				\end{messcall}
-			\end{call}
-		\end{sequencediagram} \\
-	\end{figure}
+				\end{call}
+			\end{sequencediagram}
+		\end{center}
+		\caption[Message flow in a websocket connection]{Message flow in a websocket connection}
+	\end{wrapfigure}
 	
 	In a websocket connection request, the headers of the HTTP request cannot be modified, the server will have to first 
 	accept the connection, then wait for the client to send a JWT token. The server will then verify the token and if it is 
 	valid, the client will be subscribed able to receive all messages from the channels they are a part of. Recieved 
 	messages will take the same format as the messages in the REST API.
+	\clearpage
 
-
+	\newpage
 	\subsection{Database Schema}
 	\label{subsec:database_schema}
 	The Implementations in both languages will feature the same PostgreSQL database, thus the database schema will 
@@ -188,7 +194,7 @@
 		\caption{Database schema in DBeaver}
 		\label{fig:dbeaver_database_representation}
 	\end{figure}
-	
+
 	It features a table for users, a table for channels, and a table for messages. The users table stores the username, email
 	while the channels table stores the id of whoever created it, making him the \textbf{owner} of the channel. The messages table
 	stores the content of the message, the id of the user who sent it, and the id of the channel it was sent to. All Tables also
