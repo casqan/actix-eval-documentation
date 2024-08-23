@@ -1,19 +1,47 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{hyperref}
-\usepackage{enumitem}
 \usepackage{biblatex}
-\usepackage{pgf-umlsd}
+\usepackage{color}
+\usepackage{dirtree}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
 \usepackage{parallel}
+\usepackage{pgf-umlsd}
+\usepackage{subcaption}
 \usepackage{tikz}
 \usepackage{wrapfig}
+
 \graphicspath{ {./img/} }
-\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{calc}
 \usetikzlibrary{positioning}
 \usetikzlibrary{shadows}
-\usetikzlibrary{calc}
+\usetikzlibrary{shapes.multipart}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+}
 
 \addbibresource{documentation.bib}
 
@@ -78,6 +106,7 @@
 		\item \href{https://www.postman.com/}{Postman} A tool for testing APIs.
 		\item \href{https://k6.io/}{K6} A tool for load testing web applications.
 		\item \href{https://dbeaver.io/}{DBeaver} A database management tool.
+		\item \href{https://chromewebstore.google.com/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm}{Talend API Tester} A tool for testing APIs.
 	\end{itemize}
 
 	\newpage
@@ -200,6 +229,30 @@
 	stores the content of the message, the id of the user who sent it, and the id of the channel it was sent to. All Tables also
 	include coloumns for the creation and last update time of the row.
 
+	\subsection*{A note about creation}
+	A worthy note about the creation of this database schema is that it was not created by hand. For both Rust and Java I took
+	the help of ORMs (Object Relational Mapper) which automatically map structures from each language into SQL statements. Spring
+	JPA, the ORM used in the Spring-Boot implementation, has the ability to automatically create relations between entities by using
+	anotations.
+	\begin{lstlisting}
+@Entity
+@Table(name = "channel_entity")
+public class ChannelEntity {
+	/* ... */
+	@ManyToMany
+	@JoinTable(
+			name = "channel_members",
+			joinColumns = @JoinColumn(name = "channel_id"),
+			inverseJoinColumns = @JoinColumn(name = "profile_id")
+	)
+	private List<ProfileEntity> members;
+	/* ... */
+}
+	\end{lstlisting}
+	The \textbf{@ManyToMany} annotation denotes a traditional Many to Many relationship in a relational database, allowing me to
+	let JPA do the heavy lifting of creating all necesarry foreign keys and required Tables using the \textbf{@JoinTable} annotation.
+	Further information about the workings of JPA can be found in the \hyperref[sec:java_implementation]{Java Implementation section}.
+
 	\subsection{Authentication}
 	\label{subsec:authentication}
 	Authentication will be handled using JWT tokens. When a client signs up or signs in, they will receive a JWT token that
@@ -209,15 +262,138 @@
 
 	\section{Implementation in Java}
 	\label{sec:java_implementation}
-
 	\subsection{Project Structure}
 	\label{subsec:project_structure_java}
-
+	\begin{minipage}{0.4\textwidth}
+		\dirtree{%
+		.1 backendspringboot.
+		.2 configuration.
+		.2 controller.
+		.2 data.
+		.3 dto.
+		.3 entities.
+		.3 Mapper.
+		.3 models.
+		.3 repositories.
+		.2 services.
+	}%
+	\clearpage
+	\end{minipage}%
+	\begin{minipage}{0.6\textwidth}
+		Pictured here is the Project structure for the Spring Boot implementation of the API. It is subdevided into the 
+		\textbf{configuration} folder which contains all descriptions for Spring Security, the 
+		\textbf{controller} folder which contains all rest controllers, which manage the incoming HTTP requests, A
+		\textbf{data} folder with subfolders for all relevant data structures found within the API and
+		\textbf{services} which perform all actions on the data using the repositories and basicaly glue together
+		the controllers and the data.
+	\end{minipage}%
+	
+	\newpage
 	\subsection{Spring Boot}
 	\label{subsec:spring_boot}
+	Rest APIs written in Spring boot use Java Classes with the \textbf{@RestController} annotation to
+	handle incoming HTTP requests and route them to specific methods within the annotated controller class.
+	\begin{figure*}[ht!]
+		\begin{lstlisting}
+@RestController
+@RequestMapping(CHANNEL_BASE_URL)
+public class ChannelController {
+	private final ChannelService channelService;
+	@Autowired
+	public ChannelController(ChannelService channelService) {
+		this.channelService = channelService;
+	}
+	@GetMapping("{id}")
+	public ResponseEntity<Channel> getChannel(@PathVariable UUID id){
+		return ResponseEntity.ok()
+			.body(channelService.getChannel(id));
+	}
+	@PostMapping("")
+    public ResponseEntity<Channel> createChannel() {
+        var channel = channelService.createChannel(new UUID(0, 0));
+        URI location = URI.create(CHANNEL_BASE_URL + channel.getId().toString());
+        return ResponseEntity.created(location).body(channel);
+    }
+}
+		\end{lstlisting}
+		\caption[controller java shortened]{A shortened Example of a Controller in Springboot}
+	\end{figure*}
+
+	In this case the \textbf{CHANNEL\_BASE\_URL} is set to \textbf{/api/v1/channels/} meaning, all requests starting
+	with this specific string will be routed to this class and it's methods corresponding to how they are annotated.
+	F.e. anything annotated \textbf{@GetMapping} will capture a GET request, while \textbf{@PostMapping} does the 
+	same for any POST requests that arrive at the specified path. These classes don't need to be specifically defined
+	or initiallized by the programmer, because of Java's ability to use Reflection. Spring can just look for the
+	annotation and will automatically register it as a valid Controller.
 
 	\subsection{Spring Data JPA}
 	\label{subsec:spring_data_jpa}
+	As the ORM of my choice, I have decided to use Spring JPA in this project as it gives me the lowest amount of
+	code I have to write to get SQL statements to work and as explained in the Database paragraph it allows me to
+	generate a schema from classes. A Feature, which other ORMs can lack.
+	Data in Spring Data JPA is devided into \textbf{Entities} and \textbf{Repositories}. Repositories describe a
+	collection of a specific type of Entity and can in their most basic form be written as a one liner.
+	\begin{figure*}[ht!]
+		\begin{lstlisting}
+public interface MessageEntityRepository 
+	extends JpaRepository<MessageEntity, UUID> {
+	Collection<MessageEntity> findAllByChannelId(UUID channelId);
+}
+		\end{lstlisting}
+		\caption{The Message Repository for the Message Entities}
+	\end{figure*}
+	Repositories in Spring JPA allow writing SQL Statements purely but naming the method as shown in the example,
+	where\\ 
+	\textit{findAllByChannelId} gets broken down into \\ 
+	\textbf{SELECT \* FROM message\_entity WHERE id \= channelId}
+
+	\subsection*{Entities}
+	Entities in Springboot describe the objects in the Database and get mapped to a table. where the coloumns are
+	described by the fields and properties of each object. Annotations help JPA to further define features and
+	structure of each table. In my case, the Entities required in the Database are Channels, Messages and Profiles.
+
+	As is visible however, is that these entities are not directly relayed to the controllers by the services, that
+	is because entites can be database specific and incorporate functionality that might break, when changing
+	databases. That's why for each Object in the database Model and DTO (Data Transfer object) are created
+	to decouple the controller logic from the underlying entities, which allows changing the Database without
+	requiring changes to the controller logic.
+
+	\subsection*{Services}
+	Services glue together the controller and their entities. Each controller is internally build as a Singleton
+	class for for more efficient memory management. Each service allows for specific actions on entities and breaks
+	those down into their respective operations on the repositories.
+	\begin{figure*}[ht!]
+		\begin{lstlisting}
+			
+@Service
+public class ChannelService {
+	/* ... */
+	public Channel updateChannel(Channel channel) {
+		var channelEntity = channelEntityRepository
+			.findById(channel.getId())
+			.orElse(null);
+		if (channelEntity == null) 
+			throw new IllegalArgumentException("Channel not found");
+
+		channelEntity.setDescription(channel.getDescription());
+		channelEntity.setIsPublic(channel.getIsPublic());
+		channelEntity.setName(channel.getName());
+		channelEntity.setUpdatedAt(LocalDateTime.now().toString());
+
+		var saved = channelEntityRepository.save(channelEntity);
+		return ChannelMapper.ChannelEntityToChannel(saved);
+	}
+	/* ... */
+}
+		\end{lstlisting}
+		\caption{Mapping the update action from one method to multiple repository methods}
+	\end{figure*}
+	As an example here the Channel object gets new data by first fetching the current entity and it's values from 
+	the database and changing what is needed and allowed to change by the API. Afterwards the channel entity gets
+	saved to the database and returned as it's model.
+	\subsection*{Mapper}
+	Mapper are very simple, they take in either an Entity or a model and map them to the corresponding other class.
+	They are what keeps everything decoupled and implementation independent.
 
 	\section{Implementation in Rust}
 	\label{sec:rust_implementation}
