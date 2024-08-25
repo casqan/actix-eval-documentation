@@ -258,7 +258,7 @@ public class ChannelEntity {
 }
 	\end{lstlisting}
 	The \textbf{@ManyToMany} annotation denotes a traditional Many to Many relationship in a relational database, allowing me to
-	let JPA do the heavy lifting of creating all necesarry foreign keys and required Tables using the \textbf{@JoinTable} annotation.
+	let JPA do the heavy lifting of creating all necessary foreign keys and required Tables using the \textbf{@JoinTable} annotation.
 	Further information about the workings of JPA can be found in the \hyperref[sec:java_implementation]{Java Implementation section}.
 
 	\subsection{Authentication}
@@ -288,11 +288,11 @@ public class ChannelEntity {
 	\clearpage
 	\end{minipage}%
 	\begin{minipage}{0.6\textwidth}
-		Pictured here is the Project structure for the Spring Boot implementation of the API. It is subdevided into the 
+		Pictured here is the Project structure for the Spring Boot implementation of the API. It is subdivided into the 
 		\textbf{configuration} folder which contains all descriptions for Spring Security, the 
 		\textbf{controller} folder which contains all rest controllers, which manage the incoming HTTP requests, A
 		\textbf{data} folder with subfolders for all relevant data structures found within the API and
-		\textbf{services} which perform all actions on the data using the repositories and basicaly glue together
+		\textbf{services} which perform all actions on the data using the repositories and basically glue together
 		the controllers and the data.
 	\end{minipage}%
 	
@@ -331,7 +331,7 @@ public class ChannelController {
 	with this specific string will be routed to this class and it's methods corresponding to how they are annotated.
 	F.e. anything annotated \textbf{@GetMapping} will capture a GET request, while \textbf{@PostMapping} does the 
 	same for any POST requests that arrive at the specified path. These classes don't need to be specifically defined
-	or initiallized by the programmer, because of Java's ability to use Reflection. Spring can just look for the
+	or initialized by the programmer, because of Java's ability to use Reflection. Spring can just look for the
 	annotation and will automatically register it as a valid Controller.
 
 	\subsection{Spring Data JPA}
@@ -339,7 +339,7 @@ public class ChannelController {
 	As the ORM of my choice, I have decided to use Spring JPA in this project as it gives me the lowest amount of
 	code I have to write to get SQL statements to work and as explained in the Database paragraph it allows me to
 	generate a schema from classes. A Feature, which other ORMs can lack.
-	Data in Spring Data JPA is devided into \textbf{Entities} and \textbf{Repositories}. Repositories describe a
+	Data in Spring Data JPA is divided into \textbf{Entities} and \textbf{Repositories}. Repositories describe a
 	collection of a specific type of Entity and can in their most basic form be written as a one liner.
 	\begin{figure*}[ht!]
 		\begin{lstlisting}
@@ -356,12 +356,12 @@ public interface MessageEntityRepository
 	\textbf{SELECT \* FROM message\_entity WHERE id \= channelId}
 
 	\subsection*{Entities}
-	Entities in Springboot describe the objects in the Database and get mapped to a table. where the coloumns are
+	Entities in Springboot describe the objects in the Database and get mapped to a table. where the columns are
 	described by the fields and properties of each object. Annotations help JPA to further define features and
 	structure of each table. In my case, the Entities required in the Database are Channels, Messages and Profiles.
 
 	As is visible however, is that these entities are not directly relayed to the controllers by the services, that
-	is because entites can be database specific and incorporate functionality that might break, when changing
+	is because entities can be database specific and incorporate functionality that might break, when changing
 	databases. That's why for each Object in the database Model and DTO (Data Transfer object) are created
 	to decouple the controller logic from the underlying entities, which allows changing the Database without
 	requiring changes to the controller logic.
@@ -424,11 +424,11 @@ public class ChannelService {
 	\clearpage
 	\end{minipage}%
 	\begin{minipage}{0.6\textwidth}
-		Similar to Java, the project is broken down into differnt packages, or crates as they are called
+		Similar to Java, the project is broken down into different packages, or crates as they are called
 		in Rust. In rust, this is done in order to manage dependencies better. F.E. the Services to not
 		require Actix-Web, which means it does not need to rebuild all of Actix-Web whenever there are
 		changes made to the services. Speeding up build times by a little bit. But just like in the 
-		spring boot implementation, it is once again devided up into the controllers, found in the api
+		spring boot implementation, it is once again divided up into the controllers, found in the api
 		crate, the data, found in the entity crate, which was partly generated by SeaOrm, more on that
 		later and the services glueing everything together.
 	\end{minipage}%
@@ -479,11 +479,11 @@ pub async fn get_all(state: web::Data<ApiState>) -> Result<HttpResponse, Error> 
 	
 	\subsection{SeaOrm}
 	\label{subsec:sea_orm}
-	The main Framework for modifiyng data in the Database is, atleast for this project, SeaOrm, which
+	The main Framework for modifying data in the Database is, at least for this project, SeaOrm, which
 	is the closest framework I could find to replicate the behaviour of Spring JPA. It generates 
 	builds queries using the Sea-Query crate and allows for declaring SQL statements inside of Rust,
 	rather than having to write them by hand. One thing it does not do, is build the Database from the
-	provided Entities, but rather build the entitites from an existing Database, which allowed me to
+	provided Entities, but rather build the entities from an existing Database, which allowed me to
 	use both the strength of spring JPA to create the Database, then SeaOrm to create the entities
 	for the Rust implementation.
 	\begin{lstlisting}
@@ -496,7 +496,7 @@ pub async fn get_channel(db: &DbConn, id: Uuid) -> Result<Option<channel_entity:
 }
 	\end{lstlisting}
 	
-	\subsection*{Entites}
+	\subsection*{Entities}
 	As mentioned before SeaORM allows the user to generate entities form an existing Database and
 	also map their relations to one another directly into Rust structs and Implementations. One
 	features of these generated structs is the provided structure to add code when a new entity is
@@ -557,7 +557,9 @@ impl ActiveModelBehavior for ActiveModel {
 
 	\section{Comparison}
 	\label{sec:comparison}
-
+	Coming into the comparison, I had a hypothesis. That rust would be faster at lighter workloads, while Java will excel at heavier
+	workloads. In order to prove my hypothesis I ran my the channels test with first 1 users, then the messages test with 10, 30, 50
+	and 100 VUs in that order.
 
 	\subsection{Developer Experience}
 	\label{subsec:developer_experience}
