@@ -90,12 +90,12 @@
 	Spring Boot is a popular Java framework for building web applications and microservices used by companies like 
 	Deutsche Bahn\cite{DB_Job_Description}, Udemy \cite{Techstack_Udemy} and many others\cite{Spring_Boot_stackshare}.
 	Built on top of the Spring framework, Spring Boot provides a set of tools and libraries that make it easy to build
-	web applications and microservices in Java. It finds wide adoption in the industry due to its ease of use, maintanability 
-	and scalability, aswell as the vast amount of libraries and tools available for it.
+	web applications and microservices in Java. It finds wide adoption in the industry due to its ease of use, maintainability 
+	and scalability, as well as the vast amount of libraries and tools available for it.
 
 	\subsection{An Overview of Actix Web}
 	\label{subsec:actix_web}
-	Actix is a Rust framework for building backend services in rust and the one currently one of the most actively developed framworks,
+	Actix is a Rust framework for building backend services in rust and the one currently one of the most actively developed frameworks,
 	within the Rust ecosystem. It provides provides a very similar feature set to Spring Boot making it a suitable candidate for comparison.
 
 	\newpage
@@ -235,13 +235,13 @@
 	It features a table for users, a table for channels, and a table for messages. The users table stores the username, email
 	while the channels table stores the id of whoever created it, making him the \textbf{owner} of the channel. The messages table
 	stores the content of the message, the id of the user who sent it, and the id of the channel it was sent to. All Tables also
-	include coloumns for the creation and last update time of the row.
+	include columns for the creation and last update time of the row.
 
 	\subsection*{A note about creation}
 	A worthy note about the creation of this database schema is that it was not created by hand. For both Rust and Java I took
 	the help of ORMs (Object Relational Mapper) which automatically map structures from each language into SQL statements. Spring
 	JPA, the ORM used in the Spring-Boot implementation, has the ability to automatically create relations between entities by using
-	anotations.
+	annotations.
 	\begin{lstlisting}
 @Entity
 @Table(name = "channel_entity")
