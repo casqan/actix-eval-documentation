@@ -5,6 +5,7 @@
 \usepackage{color}
 \usepackage{dirtree}
 \usepackage{enumitem}
+\usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -24,23 +25,21 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
-
-
 \lstset{frame=tb,
-  language=Java,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=3,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3,
 }
 
 \addbibresource{documentation.bib}
@@ -49,7 +48,15 @@
 \title{An Evaluation of the current State of web server development in Rust and Java}
 \author{Marc Matija}
 \date{\today}
- 
+
+\lhead{Marc Matija}
+\rhead{\today}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\pagestyle{fancy}
+
 \begin{document}
 	\maketitle
 	\vspace{2cm}
@@ -97,6 +104,7 @@
 	\begin{itemize}
 		\item \href{https://www.jetbrains.com/de-de/rust/}{RustRover} An IDE by Jetbrains that provides support for Rust development.
 		\item \href{https://www.jetbrains.com/de-de/idea/}{IntelliJ IDEA Ultimate} An IDE by Jetbrains that provides support for Java development.
+		\item \href{https://code.visualstudio.com/}{VS Code} A Text editor by microsoft used in this project for writing the LaTeX document.
 		\item \href{https://www.postgresql.org/}{PostgreSQL} A popular open-source relational database management system that is widely used in the industry.
 		\item \href{https://www.docker.com/}{Docker} A platform for building, shipping, and running applications in containers.
 		\item \href{https://docs.docker.com/compose/}{Compose} A tool for defining and running multi-container Docker applications.
@@ -150,67 +158,66 @@
 		Deletes the message with the given id from the channel with the given id.
 	\end{itemize}
 
-	Authentication endpoints:
-	\begin{itemize}
-		\item \textbf{Sign up} \texttt{ POST /api/v1/auth/signup } \\
-		Registers a new user with the given username and password.
-		\item \textbf{Sign in} \texttt{ POST /api/v1/auth/signin } \\
-		Logs in the user with the given username and password.
-		\item \textbf{Sign out} \texttt{ POST /api/v1/auth/signout } \\
-		Logs out the currently logged in user.
-	\end{itemize}
+	% Authentication endpoints:
+	% \begin{itemize}
+	% 	\item \textbf{Sign up} \texttt{ POST /api/v1/auth/signup } \\
+	% 	Registers a new user with the given username and password.
+	% 	\item \textbf{Sign in} \texttt{ POST /api/v1/auth/signin } \\
+	% 	Logs in the user with the given username and password.
+	% 	\item \textbf{Sign out} \texttt{ POST /api/v1/auth/signout } \\
+	% 	Logs out the currently logged in user.
+	% \end{itemize}
 
-	Profile endpoints:
-	\begin{itemize}
-		\item \textbf{Get Profile} \texttt{ GET /api/v1/profile } \\
-		Retrieves the profile of the currently logged in user.
-		\item \textbf{Change Profile} \texttt{ PUT /api/v1/profile } \\
-		Changes the profile of the currently logged in user.
-		\item \textbf{Delete Profile} \texttt{ DELETE /api/v1/profile } \\
-		Deletes the profile of the currently logged in user.
-	\end{itemize}
+	% Profile endpoints:
+	% \begin{itemize}
+	% 	\item \textbf{Get Profile} \texttt{ GET /api/v1/profile } \\
+	% 	Retrieves the profile of the currently logged in user.
+	% 	\item \textbf{Change Profile} \texttt{ PUT /api/v1/profile } \\
+	% 	Changes the profile of the currently logged in user.
+	% 	\item \textbf{Delete Profile} \texttt{ DELETE /api/v1/profile } \\
+	% 	Deletes the profile of the currently logged in user.
+	% \end{itemize}
 
-	\newpage
-	\subsection{Websocket API}
-	\label{subsec:websocket_api}
-	In order to allow users to recieve messages in real-time, the web server will feature a websocket endpoint that 
-	allows users to subscribe to channels and receive updates when new messages are added to the channel. Users will
-	automatically be subscribed to Channels they are a part of. When establishing a connection to a websocket endpoint,
-	they will need to provide a valid JWT token in order to authenticate themselves.
-	\begin{itemize}
-		\item \textbf{Subscribe} \- \texttt{ws://localhost:8080/api/v1/ws} \\
-		Subscribes the user to the websocket endpoint and allows them to receive updates when new messages are added
-		to the channels they are a member of.
-	\end{itemize}
-
-	\begin{wrapfigure}{L}{0.5\textwidth}
-		\begin{center}
-			\begin{sequencediagram}
-				\renewcommand\unitfactor{0.6}
-				\newthread{c}{Client}
-				\newinst[1]{s}{Web Server}
-				\begin{call}{c}{open()}{s}{}
-					\begin{call}{c}{auth()}{s}{}
-						\begin{call}{s}{verify()}{s}{}
-						\end{call}
-					\end{call}
-					\begin{sdblock}{New Message}{}
-						\begin{messcall}{s}{send()}{c}
-						\end{messcall}
-					\end{sdblock}
-					\begin{messcall}{c}{close()}{s}{}
-					\end{messcall}
-				\end{call}
-			\end{sequencediagram}
-		\end{center}
-		\caption[Message flow in a websocket connection]{Message flow in a websocket connection}
-	\end{wrapfigure}
-	
-	In a websocket connection request, the headers of the HTTP request cannot be modified, the server will have to first 
-	accept the connection, then wait for the client to send a JWT token. The server will then verify the token and if it is 
-	valid, the client will be subscribed able to receive all messages from the channels they are a part of. Recieved 
-	messages will take the same format as the messages in the REST API.
-	\clearpage
+	% \subsection{Websocket API}
+	% \label{subsec:websocket_api}
+	% In order to allow users to recieve messages in real-time, the web server will feature a websocket endpoint that 
+	% allows users to subscribe to channels and receive updates when new messages are added to the channel. Users will
+	% automatically be subscribed to Channels they are a part of. When establishing a connection to a websocket endpoint,
+	% they will need to provide a valid JWT token in order to authenticate themselves.
+	% \begin{itemize}
+	% 	\item \textbf{Subscribe} \- \texttt{ws://localhost:8080/api/v1/ws} \\
+	% 	Subscribes the user to the websocket endpoint and allows them to receive updates when new messages are added
+	% 	to the channels they are a member of.
+	% \end{itemize}
+% 
+	% \begin{wrapfigure}{L}{0.5\textwidth}
+	% 	\begin{center}
+	% 		\begin{sequencediagram}
+	% 			\renewcommand\unitfactor{0.6}
+	% 			\newthread{c}{Client}
+	% 			\newinst[1]{s}{Web Server}
+	% 			\begin{call}{c}{open()}{s}{}
+	% 				\begin{call}{c}{auth()}{s}{}
+	% 					\begin{call}{s}{verify()}{s}{}
+	% 					\end{call}
+	% 				\end{call}
+	% 				\begin{sdblock}{New Message}{}
+	% 					\begin{messcall}{s}{send()}{c}
+	% 					\end{messcall}
+	% 				\end{sdblock}
+	% 				\begin{messcall}{c}{close()}{s}{}
+	% 				\end{messcall}
+	% 			\end{call}
+	% 		\end{sequencediagram}
+	% 	\end{center}
+	% 	\caption[Message flow in a websocket connection]{Message flow in a websocket connection}
+	% \end{wrapfigure}
+	% 
+	% In a websocket connection request, the headers of the HTTP request cannot be modified, the server will have to first 
+	% accept the connection, then wait for the client to send a JWT token. The server will then verify the token and if it is 
+	% valid, the client will be subscribed able to receive all messages from the channels they are a part of. Recieved 
+	% messages will take the same format as the messages in the REST API.
+	% \clearpage
 
 	\newpage
 	\subsection{Database Schema}
@@ -364,7 +371,6 @@ public interface MessageEntityRepository
 	those down into their respective operations on the repositories.
 	\begin{figure*}[ht!]
 		\begin{lstlisting}
-			
 @Service
 public class ChannelService {
 	/* ... */
@@ -394,37 +400,176 @@ public class ChannelService {
 	\subsection*{Mapper}
 	Mapper are very simple, they take in either an Entity or a model and map them to the corresponding other class.
 	They are what keeps everything decoupled and implementation independent.
+	\subsection{Dependencies}
+	A list of all dependencies can be found \href{https://github.com/casqan/actix-eval-mono/blob/develop/backend-spring/pom.xml}{here}.
 
 	\section{Implementation in Rust}
 	\label{sec:rust_implementation}
 	\subsection{Project Structure}
 	\label{subsec:project_structure_rust}
+	\begin{minipage}{0.4\textwidth}
+		\dirtree{%
+		.1 backendactix.
+		.2 api.
+		.3 src.
+		.4 controller.
+		.2 entity.
+		.3 src.
+		.4 utils.
+		.2 service.
+		.3 src.
+		.2 src.
+	}%
+	\clearpage
+	\end{minipage}%
+	\begin{minipage}{0.6\textwidth}
+		Similar to Java, the project is broken down into differnt packages, or crates as they are called
+		in Rust. In rust, this is done in order to manage dependencies better. F.E. the Services to not
+		require Actix-Web, which means it does not need to rebuild all of Actix-Web whenever there are
+		changes made to the services. Speeding up build times by a little bit. But just like in the 
+		spring boot implementation, it is once again devided up into the controllers, found in the api
+		crate, the data, found in the entity crate, which was partly generated by SeaOrm, more on that
+		later and the services glueing everything together.
+	\end{minipage}%
 
 	\subsection{Actix}
 	\label{subsec:actix}
+	Just like Spring, Actix features a System of routes by annotations (macros), however, due to the nature
+	of Rust not featuring reflections, each route requires to at some point be manually registered to the
+	server as a service, or by declaring it as a request endpoint and setting it's route and HTTP 
+	Request-type manually. In order to achieve this, Actix provides a configuration struct to register
+	said services.
+	\begin{lstlisting}
+// found in api/src/lib.rs
+fn init(cfg: &mut web::ServiceConfig) {
+    controller::channel_controller::init(cfg);
+    controller::message_controller::init(cfg);
+}
+
+// found in api/src/controller/channel_controller.rs
+pub fn init (cfg: &mut web::ServiceConfig){
+    cfg.service(create);
+    cfg.service(get_all);
+    cfg.service(get);
+    cfg.service(put);
+    cfg.service(delete);
+}
+	\end{lstlisting}
+	Provided here is an example taken from the channel controller which gets all current channels in
+	the database and returns them as a JSON object. The Service is talked to using the implementation
+	methods on the ChannelService struct. 
+	\begin{lstlisting}
+#[get("/api/v1/channels/")]
+pub async fn get_all(state: web::Data<ApiState>) -> Result<HttpResponse, Error> {
+    let conn = &state.conn;
+    let result = ChannelService::get_all_channels(conn).await;
+    
+    if result.is_err() {
+        return handle_error_internal(result.unwrap_err());
+    }
+
+    let json_result = serde_json::to_string(&result.unwrap());
+    Ok(HttpResponse::Ok()
+        .content_type(ContentType::json())
+        .body(json_result.expect("Failed to serialize")))
+}
+
+	\end{lstlisting}
 	
-	\subsection{Sea-ORM}
+	\subsection{SeaOrm}
 	\label{subsec:sea_orm}
+	The main Framework for modifiyng data in the Database is, atleast for this project, SeaOrm, which
+	is the closest framework I could find to replicate the behaviour of Spring JPA. It generates 
+	builds queries using the Sea-Query crate and allows for declaring SQL statements inside of Rust,
+	rather than having to write them by hand. One thing it does not do, is build the Database from the
+	provided Entities, but rather build the entitites from an existing Database, which allowed me to
+	use both the strength of spring JPA to create the Database, then SeaOrm to create the entities
+	for the Rust implementation.
+	\begin{lstlisting}
+pub async fn get_all_channels(db: &DbConn) -> Result<Vec<channel_entity::Model>, DbErr>{
+    channel_entity::Entity::find().all(db).await
+}
+
+pub async fn get_channel(db: &DbConn, id: Uuid) -> Result<Option<channel_entity::Model>, DbErr>{
+    channel_entity::Entity::find_by_id(id).one(db).await
+}
+	\end{lstlisting}
+	
+	\subsection*{Entites}
+	As mentioned before SeaORM allows the user to generate entities form an existing Database and
+	also map their relations to one another directly into Rust structs and Implementations. One
+	features of these generated structs is the provided structure to add code when a new entity is
+	created and when an entity is deleted, this allows easy modification and preset values for f.e.
+	the creation and update date.
+
+	\begin{lstlisting}
+impl ActiveModelBehavior for ActiveModel {
+    fn new() -> Self {
+        let current_date: DateTime<Utc> = SystemTime::now().into();
+        Self {
+            is_public : Set(false),
+            id: Set(Uuid::new_v4()),
+            owner_id : Set(
+				Option::Some(
+					uuid!("00000000-0000-0000-0000-000000000000")
+				)),
+            created_at : Set(current_date.to_rfc3339()),
+            description : Set("".to_owned()),
+            name : Set("".to_owned()),
+            updated_at : Set(current_date.to_rfc3339()),
+            ..ActiveModelTrait::default()
+        }
+    }
+}
+	\end{lstlisting}
+
+	\subsection{Dependencies}
+	A list of all dependencies can be found \href{https://github.com/casqan/actix-eval-mono}{here}.
 
 	\section{Testing Methodology}
 	\label{sec:testing_methodology}
+	As the main focus of this paper is to test performance, I will perform load testing to see,
+	how much each implementation differs in performance. In doing so, i used help from the tool
+	k6 developed by Grafana, which allows me to write my load tests in JavaScript and automatically
+	get the results in a specified format. For this project, all results are written to a JSON file
+	for later analysis.
 
 	\subsection{K6}
 	\label{subsec:k6}
-
-	\subsection{Load Testing}
-	\label{subsec:load_testing}
-
+	As explained before for the main testing tool used for both implementations is k6, providing
+	a platform independent system to test apis with. K6 works by leveraging the node.js runtime
+	to create virtual users to send requests at the api specified by the user, or by using .env
+	files.
+	
 	\subsection{Performance Testing}
 	\label{subsec:performance_testing}
 
+	\subsection{Load Testing}
+	\label{subsec:load_testing}
+	To facilitate efficient load testing, the k6 test suite is ran multiple times
+
+	\subsection{Other Tests}
+	\label{subsec:other_tests}
+	\subsection*{Build times}
+	\subsection*{Memory Usage}
+	\subsection*{CPU Usage}
+
 	\section{Comparison}
 	\label{sec:comparison}
-	\subsection{Developer Experience}
-	\subsection{Performance}
-	
-	\section{Conclusion}
 
+
+	\subsection{Developer Experience}
+	\label{subsec:developer_experience}
+	
+	\subsection{Performance}
+	\label{subsec:performance}
+
+	\subsection{Load Endurance}
+	\label{subsec:load_endurance}
+
+	\section{Conclusion}
+	\label{subsec:conclusion}
+	
 	\newpage
 	\section{Sources}
 	\label{sec:Sources}
@@ -437,7 +582,7 @@ public class ChannelService {
 		\item \href{https://doc.rust-lang.org/rustdoc/}{Rustdoc}
 		\item \href{https://actix.rs/}{Actix}
 		\item \href{https://dbeaver.io/}{DBeaver}
-		\item \href{https://github.com/SeaQL/sea-orm/tree/master/examples/actix_example}{Sea-ORM Actix Example}
+		\item \href{https://github.com/SeaQL/SeaOrm/tree/master/examples/actix_example}{SeaOrm Actix Example}
 	\end{itemize}
 	\printbibliography[title={Whole bibliography}]
 \end{document}
