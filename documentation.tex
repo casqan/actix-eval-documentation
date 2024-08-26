@@ -81,21 +81,21 @@
 	Java is a mature and widely used programming language that is known for its performance, scalability, and reliability.
 	However, in recent years, Rust has emerged as a promising alternative to Java for web server development as seen at Discord 
 	\cite{Discord}, Cloudflare\cite{Cloudflare_Pingora}, and other companies. 
-	Rust is in stark contrast to Java, is a systems programming language that is designed for performance, safety, and concurrency.
+	Rust is, in stark contrast to Java, a systems programming language that is designed for performance, safety, and concurrency.
 	This paper aims to evaluate the current state of web server development in Rust and Java, and to provide an overview of 
 	the tools, libraries, and best practices for web server development in both languages.
 	
 	\subsection{An Overview of Spring Boot}
 	\label{subsec:spring_boot}
-	Spring Boot is a popular Java framework for building web applications and microservices used by companies like 
+	Spring Boot is a popular Java framework for building web applications and microservices by companies like 
 	Deutsche Bahn\cite{DB_Job_Description}, Udemy \cite{Techstack_Udemy} and many others\cite{Spring_Boot_stackshare}.
 	Built on top of the Spring framework, Spring Boot provides a set of tools and libraries that make it easy to build
-	web applications and microservices in Java. It finds wide adoption in the industry due to its ease of use, maintainability 
+	web applications and microservices in Java. It is widely adoption in the industry due to its ease of use, maintainability 
 	and scalability, as well as the vast amount of libraries and tools available for it.
 
 	\subsection{An Overview of Actix Web}
 	\label{subsec:actix_web}
-	Actix is a Rust framework for building backend services in rust and the one currently one of the most actively developed frameworks,
+	Actix is a Rust framework for building backend services in rust and currently one of the most actively developed frameworks,
 	within the Rust ecosystem. It provides provides a very similar feature set to Spring Boot making it a suitable candidate for comparison.
 
 	\newpage
@@ -123,9 +123,7 @@
 	\label{sec:example_project}
 	In order to evaluate the current state of web server development in Rust and Java, I will build a simple web server in 
 	both languages using the previously mentioned frameworks. The web server will feature a REST api that allows users to 
-	create channels, add messages to channels, and retrieve messages from said channels. In addition, the web server will 
-	feature a websocket endpoint that allows users to subscribe to channels and receive messages in real-time. Authentication 
-	will be handled using JWT tokens and a profile endpoint to authenticate users and retrieve their information.
+	create channels, add messages to channels, and retrieve messages from said channels.
 
 	\subsection{REST API}
 	\label{subsec:rest_api}
@@ -134,13 +132,13 @@
 	Channel endpoints:
 	\begin{itemize}
 		\item \textbf{Create Channel} \- POST /api/v1/channels \\
-		Creates a new channel with the given name.
+		Creates a new channel
 		\item \textbf{Get Channel} \- GET /api/v1/channels/\{id\} \\
 		Retrieves the channel with the given id.
 		\item \textbf{Get All Channels} \- GET /api/v1/channels \\
 		Retrieves all channels.
 		\item \textbf{Change Channel} \- PUT /api/v1/channels/\{id\} \\
-		Changes the name of the channel with the given id.
+		Changes the name and description of the channel with the given id.
 		\item \textbf{Delete Channel} \- DELETE /api/v1/channels/\{id\} \\
 		Deletes the channel with the given id.
 	\end{itemize}
@@ -261,13 +259,6 @@ public class ChannelEntity {
 	let JPA do the heavy lifting of creating all necessary foreign keys and required Tables using the \textbf{@JoinTable} annotation.
 	Further information about the workings of JPA can be found in the \hyperref[sec:java_implementation]{Java Implementation section}.
 
-	\subsection{Authentication}
-	\label{subsec:authentication}
-	Authentication will be handled using JWT tokens. When a client signs up or signs in, they will receive a JWT token that
-	they can use to authenticate themselves when making requests to the web server. The JWT token will be sent in the 
-	Authorization header of the HTTP request as a Bearer token. Both Server implementations will have to verify the token 
-	before sending new messages to the client.
-
 	\section{Implementation in Java}
 	\label{sec:java_implementation}
 	\subsection{Project Structure}
@@ -338,7 +329,7 @@ public class ChannelController {
 	\label{subsec:spring_data_jpa}
 	As the ORM of my choice, I have decided to use Spring JPA in this project as it gives me the lowest amount of
 	code I have to write to get SQL statements to work and as explained in the Database paragraph it allows me to
-	generate a schema from classes. A Feature, which other ORMs can lack.
+	generate a schema from classes. A feature, which other ORMs often can lack.
 	Data in Spring Data JPA is divided into \textbf{Entities} and \textbf{Repositories}. Repositories describe a
 	collection of a specific type of Entity and can in their most basic form be written as a one liner.
 	\begin{figure*}[ht!]
@@ -356,19 +347,19 @@ public interface MessageEntityRepository
 	\textbf{SELECT \* FROM message\_entity WHERE id \= channelId}
 
 	\subsection*{Entities}
-	Entities in Springboot describe the objects in the Database and get mapped to a table. where the columns are
+	Entities in Springboot describe the objects in the Database and get mapped to a table, where the columns are
 	described by the fields and properties of each object. Annotations help JPA to further define features and
 	structure of each table. In my case, the Entities required in the Database are Channels, Messages and Profiles.
 
 	As is visible however, is that these entities are not directly relayed to the controllers by the services, that
 	is because entities can be database specific and incorporate functionality that might break, when changing
-	databases. That's why for each Object in the database Model and DTO (Data Transfer object) are created
+	databases. That's why, for each Object in the database, a Model and a DTO (Data Transfer object) are created
 	to decouple the controller logic from the underlying entities, which allows changing the Database without
 	requiring changes to the controller logic.
 
 	\subsection*{Services}
 	Services glue together the controller and their entities. Each controller is internally build as a Singleton
-	class for for more efficient memory management. Each service allows for specific actions on entities and breaks
+	class for more efficient memory management. Each service allows for specific actions on entities and breaks
 	those down into their respective operations on the repositories.
 	\begin{figure*}[ht!]
 		\begin{lstlisting}
@@ -427,7 +418,7 @@ public class ChannelService {
 		Similar to Java, the project is broken down into different packages, or crates as they are called
 		in Rust. In rust, this is done in order to manage dependencies better. F.E. the Services to not
 		require Actix-Web, which means it does not need to rebuild all of Actix-Web whenever there are
-		changes made to the services. Speeding up build times by a little bit. But just like in the 
+		changes made to the services. Speeding up build times by a little bit. Just like in the 
 		spring boot implementation, it is once again divided up into the controllers, found in the api
 		crate, the data, found in the entity crate, which was partly generated by SeaOrm, more on that
 		later and the services glueing everything together.
@@ -480,7 +471,7 @@ pub async fn get_all(state: web::Data<ApiState>) -> Result<HttpResponse, Error> 
 	\subsection{SeaOrm}
 	\label{subsec:sea_orm}
 	The main Framework for modifying data in the Database is, at least for this project, SeaOrm, which
-	is the closest framework I could find to replicate the behaviour of Spring JPA. It generates 
+	is the closest framework I could find to replicate the behaviour of Spring JPA. It 
 	builds queries using the Sea-Query crate and allows for declaring SQL statements inside of Rust,
 	rather than having to write them by hand. One thing it does not do, is build the Database from the
 	provided Entities, but rather build the entities from an existing Database, which allowed me to
@@ -499,8 +490,8 @@ pub async fn get_channel(db: &DbConn, id: Uuid) -> Result<Option<channel_entity:
 	\subsection*{Entities}
 	As mentioned before SeaORM allows the user to generate entities form an existing Database and
 	also map their relations to one another directly into Rust structs and Implementations. One
-	features of these generated structs is the provided structure to add code when a new entity is
-	created and when an entity is deleted, this allows easy modification and preset values for f.e.
+	feature of these generated structs is the provided structure to add code when a new entity is
+	created and when an entity is deleted. This allows easy modification and preset values for f.e.
 	the creation and update date.
 
 	\begin{lstlisting}
@@ -530,7 +521,7 @@ impl ActiveModelBehavior for ActiveModel {
 	\section{Testing Methodology}
 	\label{sec:testing_methodology}
 	As the main focus of this paper is to test performance, I will perform load testing to see,
-	how much each implementation differs in performance. In doing so, i used help from the tool
+	how much each implementation differs in performance. In doing so, i used the tool
 	k6 developed by Grafana, which allows me to write my load tests in JavaScript and automatically
 	get the results in a specified format. For this project, all results are written to a JSON file
 	for later analysis. All tests were run on my private system with a Ryzen 7 3800x Prozessor, and
@@ -538,7 +529,7 @@ impl ActiveModelBehavior for ActiveModel {
 
 	\subsection{K6}
 	\label{subsec:k6}
-	As explained before for the main testing tool used for both implementations is k6, providing
+	The main testing tool used for both implementations is k6, providing
 	a platform independent system to test apis with. K6 works by leveraging the node.js runtime
 	to create virtual users to send requests at the api specified by the user, or by using .env
 	files.
@@ -556,8 +547,11 @@ impl ActiveModelBehavior for ActiveModel {
 	\subsection{Other Tests}
 	\label{subsec:other_tests}
 	\subsection*{Build times}
-	\subsection*{Memory Usage}
-	\subsection*{CPU Usage}
+	Build times were measured using cargo's --timings attribute, while java's build time was taken
+	out of IntelliJ idea
+	\subsection*{File Size}
+	File size was measured using the windows file manager and looking at the rust binary, then the
+	java .jar file.
 
 	\section{Comparison}
 	\label{sec:comparison}
@@ -569,10 +563,13 @@ impl ActiveModelBehavior for ActiveModel {
 	\label{subsec:developer_experience}
 	Coming from a Java background, I was more versed in the development of web servers in Springboot, but while saying that, once
 	I got the hang of Actix the development experience was not very dissimilar, which was to be expected given that both,
-	frameworks use an established pattern also found in frameworks like microsoft's Asp.NET for C\# and Flask for Pyhthon.
+	frameworks use an established pattern also found in frameworks like Microsoft's Asp.NET for C\# and Flask for Pyhthon.
 	However, having the comforts of JPA and the ability to build Databases by writing them in Java instead of pure SQL was
-	definitely a big help in the development of this entire Project.
+	definitely a big help in the development of this entire Project. Originally, it was supposed to include a websocket
+	implementation too for real time transfer, however, the documentation for websockets on actix is heavily outdated and
+	I had to scrap that feature due to time constraints.
 	
+	\newpage
 	\subsection{Performance}
 	\label{subsec:performance}
 	\begin{wrapfigure}{L}{0.6\textwidth}
@@ -647,7 +644,7 @@ impl ActiveModelBehavior for ActiveModel {
 	\subsection*{Closing words}
 	\label{subsec:closing_words}
 	Noteworthy of theses tests is that it only covers a small portion of features of both the Java, as well as the Rust ecosystem, as well as
-	only one framework for each language other frameworks, such as Rocket.rs may be faster than Actix. Furthermore it only covers the
+	only one framework, others such as Rocket.rs may be faster than Actix. Furthermore it only covers the
 	standard system of relational databases, when alternatives, such as Document oriented databases like MongoDB and Google's Firebase
 	exist. Further investigation is needed in this field as well as covering multiple use cases such as implementing a web server on an
 	embedded system such as an ESP32, which java does not run on. 
